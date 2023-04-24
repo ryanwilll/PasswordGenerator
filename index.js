@@ -52,12 +52,27 @@ function generatePassword() {
 function verifySecurity() {
   // 20% Crítico ->  90% Safe
 
-  const percent = Math.round(
+  let percent = Math.round(
     (passwordLength / 64) * 25 +
-      (upperCaseCheckEl.checked ? 15 : 0) +
-      (numberCheckEl.checked ? 20 : 0) +
-      (symbolCheckEl.checked ? 40 : 0)
+      (upperCaseCheckEl.checked ? 20 : 0) +
+      (numberCheckEl.checked ? 25 : 0) +
+      (symbolCheckEl.checked ? 30 : 0)
   );
+
+  switch (true) {
+    case passwordLength < 10:
+      percent -= 50;
+      break;
+    case passwordLength < 15:
+      percent -= 20;
+      break;
+    case passwordLength < 25:
+      percent -= 5;
+      break;
+    case passwordLength == 64:
+      percent = percent;
+      break;
+  }
 
   indicatorBarEl.style.width = `${percent}%`;
 
@@ -82,15 +97,6 @@ function verifySecurity() {
 }
 
 function calculateFontSize() {
-  if (passwordLength > 45) {
-    outputPasswordEl.classList.remove("font-sm");
-    outputPasswordEl.classList.remove("font-xs");
-    outputPasswordEl.classList.add("font-xxs");
-  } else if (passwordLength > 32) {
-  } else if (passwordLength > 22) {
-  } else {
-  }
-
   switch (true) {
     case passwordLength > 45:
       outputPasswordEl.classList.add("font-xxs");
@@ -115,3 +121,10 @@ function copy() {
 }
 
 generatePassword();
+
+tippy("#renew", {
+  content: "Gerar Novamente",
+});
+tippy("#btn-copy", {
+  content: "Copiar Senha",
+});
